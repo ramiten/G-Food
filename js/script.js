@@ -549,5 +549,257 @@ window.addEventListener("DOMContentLoaded", () => {
   //   },
   // })
   //   .then((response) => response.json())
-  //   .then((json) => console.log(json));
+  //   .then((json) => console.log(json));,
+
+  //slider Мой вариант:
+  //Что мне тут не нравится? ну в целом код отстойный + самое поганое что я добавляю класс hide выбранному элементу
+  // const counter = document.querySelector(".offer__slider-counter"),
+  //   currentSlider = counter.querySelector("#current"),
+  //   total = counter.querySelector("#total"),
+  //   prevSlide = document.querySelector(".offer__slider-prev"),
+  //   imgPrev = prevSlide.querySelector("[alt = prev]"),
+  //   nextSlide = document.querySelector(".offer__slider-next"),
+  //   imgNext = nextSlide.querySelector("[alt = next]"),
+  //   parentImg = document.querySelectorAll(".offer__slide"),
+  //   imgPepper = document.querySelector("[alt=pepper]"),
+  //   imgFood = document.querySelector("[alt=food]"),
+  //   imgOil = document.querySelector("[alt=oil]"),
+  //   imgPaprika = document.querySelector("[alt=paprika]");
+
+  // currentSlider.textContent = "01";
+
+  // if (+total.textContent >= 9) {
+  //   total.textContent = parentImg.length;
+  // } else {
+  //   total.textContent = "0" + parentImg.length;
+  // }
+
+  // correctSliderImg();
+
+  // counter.addEventListener("click", (e) => {
+  //   if (e.target === prevSlide || e.target === imgPrev) {
+  //     if (currentSlider.textContent === "01") {
+  //       currentSlider.textContent = total.textContent;
+  //     } else if (currentSlider.textContent > 10) {
+  //       currentSlider.textContent = currentSlider.textContent - 1;
+  //     } else {
+  //       currentSlider.textContent = "0" + (currentSlider.textContent - 1);
+  //     }
+  //   }
+  //   if (e.target === nextSlide || e.target === imgNext) {
+  //     if (currentSlider.textContent === total.textContent) {
+  //       currentSlider.textContent = "01";
+  //     } else if (+currentSlider.textContent >= 9) {
+  //       currentSlider.textContent = +currentSlider.textContent + 1;
+  //     } else {
+  //       currentSlider.textContent = "0" + (+currentSlider.textContent + 1);
+  //     }
+  //   }
+  //   correctSliderImg();
+  // });
+
+  // function correctSliderImg() {
+  //   if (currentSlider.textContent === "01") {
+  //     hideImg();
+  //     imgOil.parentElement.classList.remove("hide");
+  //   }
+  //   if (currentSlider.textContent === "02") {
+  //     hideImg();
+  //     imgPaprika.parentElement.classList.remove("hide");
+  //   }
+  //   if (currentSlider.textContent === "03") {
+  //     hideImg();
+  //     imgPepper.parentElement.classList.remove("hide");
+  //   }
+  //   if (currentSlider.textContent === "04") {
+  //     hideImg();
+  //     imgFood.parentElement.classList.remove("hide");
+  //   }
+  // }
+
+  // function hideImg() {
+  //   parentImg.forEach((item) => {
+  //     item.classList.add("hide");
+  //   });
+  // }
+  // ВСЁ 70 строк, хренового кода, сделал слайдер, НИЖЕ ЕГО ВЕРСИЯ(1) ->
+  // let slideIndex = 1; // текущий номер слайда
+
+  // const slides = document.querySelectorAll(".offer__slide"),
+  //   prev = document.querySelector(".offer__slider-prev"),
+  //   next = document.querySelector(".offer__slider-next"),
+  //   total = document.querySelector("#total"),
+  //   current = document.querySelector("#current");
+
+  // showSlider(slideIndex);
+
+  // if (slides.length < 10) {
+  //   // выводим тотал на страницу
+  //   total.textContent = `0${slides.length}`;
+  // } else {
+  //   total.textContent = slides.length;
+  // }
+
+  // function showSlider(n) {
+  //   //функция показа слайдов
+  //   if (n > slides.length) {
+  //     slideIndex = 1;
+  //   }
+
+  //   if (n < 1) {
+  //     slideIndex = slides.length;
+  //   }
+
+  //   slides.forEach((item) => item.classList.add("hide"));
+
+  //   slides[slideIndex - 1].classList.remove("hide");
+
+  //   if (slideIndex < 10) {
+  //     // выводим тотал на страницу
+  //     current.textContent = `0${slideIndex}`;
+  //   } else {
+  //     current.textContent = slideIndex;
+  //   }
+  // }
+
+  // function plusSlides(n) {
+  //   showSlider((slideIndex += n));
+  // }
+
+  // prev.addEventListener("click", () => {
+  //   plusSlides(-1);
+  // });
+
+  // next.addEventListener("click", () => {
+  //   plusSlides(1);
+  // });
+
+  // НИЖЕ ЕГО ВЕРСИЯ(2) карусель->
+
+  let offset = 0;
+  let slideIndex = 1;
+
+  const slides = document.querySelectorAll(".offer__slide"),
+    prev = document.querySelector(".offer__slider-prev"),
+    next = document.querySelector(".offer__slider-next"),
+    total = document.querySelector("#total"),
+    current = document.querySelector("#current"),
+    slidesWrapper = document.querySelector(".offer__slider-wrapper"),
+    width = window.getComputedStyle(slidesWrapper).width,
+    slidesField = document.querySelector(".offer__slider-inner"),
+    // для дотов
+    theWholeSlider = document.querySelector(".offer__slider"),
+    dotesWrapper = document.createElement("div");
+
+  slidesField.style.width = 100 * slides.length + "%";
+
+  slides.forEach((slide) => {
+    slide.style.width = width;
+  });
+
+  if (slides.length < 10) {
+    total.textContent = `0${slides.length}`;
+  } else {
+    total.textContent = slides.length;
+  }
+
+  if (slideIndex < 10) {
+    current.textContent = `0${slideIndex}`;
+  } else {
+    current.textContent = `${slideIndex}`;
+  }
+
+  // для дот
+  theWholeSlider.style.position = "relative";
+  dotesWrapper.classList.add("carousel-indicators");
+
+  theWholeSlider.insertAdjacentElement("beforeend", dotesWrapper);
+
+  for (let index = 0; index < slides.length; index++) {
+    const dot = document.createElement("checkbox");
+    dot.setAttribute("type", "radio");
+    dot.setAttribute("data-slideIndex", index);
+
+    if (slideIndex === +dot.getAttribute("data-slideIndex", index) + 1) {
+      dot.classList.add("actived");
+    }
+
+    dot.classList.add("dot");
+    dotesWrapper.append(dot);
+  }
+
+  function showCorrectDot(n) {
+    dotesWrapper.childNodes.forEach((dot) => {
+      if (+dot.getAttribute("data-slideIndex") === n - 1) {
+        dot.classList.add("actived");
+      } else {
+        dot.classList.remove("actived");
+      }
+    });
+  }
+  //
+
+  next.addEventListener("click", () => {
+    if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+      offset = 0;
+    } else {
+      offset += +width.slice(0, width.length - 2);
+    }
+
+    if (slideIndex == slides.length) {
+      slideIndex = 1;
+    } else {
+      slideIndex++;
+    }
+
+    showCurrentSlide(slideIndex);
+    showCorrectDot(slideIndex); // для дотов
+    slidesField.style.transform = `translateX(-${offset}px)`;
+  });
+
+  prev.addEventListener("click", () => {
+    if (offset == 0) {
+      offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+    } else {
+      offset -= +width.slice(0, width.length - 2);
+    }
+
+    if (slideIndex == 1) {
+      slideIndex = slides.length;
+    } else {
+      slideIndex--;
+    }
+
+    showCurrentSlide(slideIndex);
+    showCorrectDot(slideIndex); // для дотов
+    slidesField.style.transform = `translateX(-${offset}px)`;
+  });
+
+  function showCurrentSlide(n) {
+    if (n < 10) {
+      current.textContent = `0${n}`;
+    } else {
+      current.textContent = n;
+    }
+  }
+
+  // Dotes for slider моя реализация, иду по его алгоритму
+
+  dotesWrapper.addEventListener("click", (e) => {
+    if (e.target.classList.contains("dot")) {
+      const dotIndex = +e.target.getAttribute("data-slideIndex");
+      dotesWrapper.childNodes.forEach((item) => {
+        item.classList.remove("actived");
+      });
+      e.target.classList.add("actived");
+
+      offset = +width.slice(0, width.length - 2) * dotIndex;
+
+      slidesField.style.transform = `translateX(-${offset}px)`;
+
+      slideIndex = dotIndex + 1;
+
+      showCurrentSlide(dotIndex + 1);
+    }
+  });
 });
